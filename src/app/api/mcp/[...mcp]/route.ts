@@ -65,7 +65,7 @@ const handler = createMcpHandler(async (server) => {
             };
         }
     );
-});
+}, { basePath: '/api/mcp' });
 
 // 3. Export the GET/POST routes for the catch-all
 export async function GET(req: Request) {
