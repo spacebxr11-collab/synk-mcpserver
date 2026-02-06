@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    runtime: 'edge',
+    /* config options here */
 };
 
 export default nextConfig;

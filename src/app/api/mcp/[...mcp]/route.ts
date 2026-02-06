@@ -1,6 +1,6 @@
 import { createMcpHandler } from '@vercel/mcp-adapter';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 import { z } from 'zod';
 import { createClient } from '@supabase/supabase-js';
