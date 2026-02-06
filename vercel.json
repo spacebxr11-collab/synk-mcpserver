@@ -1,10 +1,4 @@
 {
     "framework": "nextjs",
-    "name": "synk-mcp-edge",
-    "functions": {
-        "src/app/api/mcp/**/*.ts": {
-            "runtime": "edge",
-            "maxDuration": 60
-        }
-    }
+    "name": "synk-mcp-edge"
 }
