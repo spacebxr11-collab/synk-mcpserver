@@ -65,7 +65,13 @@ const handler = createMcpHandler(async (server) => {
             };
         }
     );
-}, { basePath: '/api/mcp' });
+},
+    {
+        serverInfo: { name: 'synk-cloud-mcp', version: '1.0.0' }
+    },
+    {
+        basePath: '/api/mcp'
+    });
 
 // 3. Export the GET/POST routes for the catch-all
 export async function GET(req: Request) {
