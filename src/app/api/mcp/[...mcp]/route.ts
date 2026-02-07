@@ -74,23 +74,29 @@ const handler = createMcpHandler(async (server) => {
         verboseLogs: true
     });
 
-// 3. CORS Helper
-function applyCors(res: Response) {
+// 3. CORS & SSE Helper
+function optimizeResponse(res: Response) {
     res.headers.set('Access-Control-Allow-Origin', '*');
     res.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-mcp-version');
+
+    // Disable buffering for SSE (Crucial for Vercel/Nginx)
+    res.headers.set('X-Accel-Buffering', 'no');
+    res.headers.set('Cache-Control', 'no-cache, no-transform');
+    res.headers.set('Connection', 'keep-alive');
+
     return res;
 }
 
 // 4. Export the GET/POST routes for the catch-all
 export async function GET(req: Request) {
     const res = await handler(req);
-    return applyCors(res);
+    return optimizeResponse(res);
 }
 
 export async function POST(req: Request) {
     const res = await handler(req);
-    return applyCors(res);
+    return optimizeResponse(res);
 }
 
 export async function OPTIONS() {
