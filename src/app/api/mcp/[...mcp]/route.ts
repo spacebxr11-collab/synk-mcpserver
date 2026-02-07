@@ -90,13 +90,43 @@ function optimizeResponse(res: Response) {
 
 // 4. Export the GET/POST routes for the catch-all
 export async function GET(req: Request) {
-    const res = await handler(req);
-    return optimizeResponse(res);
+    const url = new URL(req.url);
+
+    // Quick health check
+    if (url.pathname.endsWith('/health')) {
+        return applyCors(new Response(JSON.stringify({ status: 'ok', timestamp: Date.now() }), {
+            headers: { 'Content-Type': 'application/json' }
+        }));
+    }
+
+    try {
+        const res = await handler(req);
+        return optimizeResponse(res);
+    } catch (err: any) {
+        return applyCors(new Response(JSON.stringify({ error: err.message }), {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        }));
+    }
 }
 
 export async function POST(req: Request) {
-    const res = await handler(req);
-    return optimizeResponse(res);
+    try {
+        const res = await handler(req);
+        return optimizeResponse(res);
+    } catch (err: any) {
+        return applyCors(new Response(JSON.stringify({ error: err.message }), {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        }));
+    }
+}
+
+function applyCors(res: Response) {
+    res.headers.set('Access-Control-Allow-Origin', '*');
+    res.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-mcp-version');
+    return res;
 }
 
 export async function OPTIONS() {
