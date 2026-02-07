@@ -70,14 +70,37 @@ const handler = createMcpHandler(async (server) => {
         serverInfo: { name: 'synk-cloud-mcp', version: '1.0.0' }
     },
     {
-        basePath: '/api/mcp'
+        basePath: '/api/mcp',
+        verboseLogs: true
     });
 
-// 3. Export the GET/POST routes for the catch-all
+// 3. CORS Helper
+function applyCors(res: Response) {
+    res.headers.set('Access-Control-Allow-Origin', '*');
+    res.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-mcp-version');
+    return res;
+}
+
+// 4. Export the GET/POST routes for the catch-all
 export async function GET(req: Request) {
-    return handler(req);
+    const res = await handler(req);
+    return applyCors(res);
 }
 
 export async function POST(req: Request) {
-    return handler(req);
+    const res = await handler(req);
+    return applyCors(res);
+}
+
+export async function OPTIONS() {
+    return new Response(null, {
+        status: 204,
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-mcp-version',
+            'Access-Control-Max-Age': '86400',
+        }
+    });
 }
