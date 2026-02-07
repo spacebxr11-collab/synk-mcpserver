@@ -71,7 +71,8 @@ const handler = createMcpHandler(async (server) => {
     },
     {
         basePath: '/api/mcp',
-        verboseLogs: true
+        verboseLogs: true,
+        redisUrl: process.env.KV_URL
     });
 
 // 3. CORS & SSE Helper
